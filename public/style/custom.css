@@ -1,0 +1,5 @@
+/* fix size image */
+img {
+    height: 300px;
+    width: 400px;
+}
