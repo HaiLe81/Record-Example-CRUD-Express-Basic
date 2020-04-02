@@ -10,16 +10,21 @@ block cdn-bootstrap
             input(type="text", name="q", class="form-control")
             button(class="btn btn-primary ml-2") Search
 
-    table.table
-        tr
-            th Name
-            th Phone
-            th Age
-            td
+    table.table.table-hover
+        tr.thead-dark
+            th.align-middle Name
+            th.align-middle Phone
+            th.align-middle Age
+            th Action
         each person in FreeLaHuflit
             tr
-                td= person.name
-                td= person.phone
-                td= person.age
-                td
-                    a.btn-light(href="/users/" + person.id) View
+                td.align-middle= person.name
+                td.align-middle= person.phone
+                td.align-middle= person.age
+                td 
+                    form(action="" method="POST")
+                        .form-group
+                            a.btn.btn-light.m-1(href="/users/" + person.id) View
+                            a.btn.btn-light.m-1(href="#") Edit
+                            a.btn.btn-light.m-1(href="#") Delete
+    include navigation.pug

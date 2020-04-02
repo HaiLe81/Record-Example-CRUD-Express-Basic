@@ -1,11 +1,21 @@
+var md5 = require('md5');
+
 var db = require('../db');
 
 var shortid = require('shortid');
 
 module.exports = {
     index: (req, res) => {
+
+        let page = parseInt(req.query.page) || 1;
+        let perPage = 3;
+        
+        let start = (page -1) * perPage;
+        let end = page * perPage;
+
         res.render('users/index', {
-            FreeLaHuflit: db.get('FreeLaHuflit').value()
+            FreeLaHuflit: db.get('FreeLaHuflit').value().slice(start, end),
+            fullFree: db.get('FreeLaHuflit').value()
         });
     },
     search: (req, res) => {
@@ -13,7 +23,7 @@ module.exports = {
         let matchedUsers = db.get('FreeLaHuflit').value().filter((user) => {
             return user.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
         })
-        
+
         res.render('users/index', {
             FreeLaHuflit: matchedUsers
         })
@@ -24,11 +34,11 @@ module.exports = {
     get: (req, res) => {
         // var id = parseInt(req.params.id);
         var id = req.params.id;
-    
+
         // console.log(typeof id)
         var FreeLaHuflit = db.get('FreeLaHuflit').find({ id: id }).value();
-    
-        res.render('users/view', { 
+
+        res.render('users/view', {
             FreeLaHuflit: FreeLaHuflit
         });
     },
@@ -36,7 +46,18 @@ module.exports = {
         req.body.id = shortid.generate();
 
         db.get('FreeLaHuflit').push(req.body)
-        .write();
+            .write();
         res.redirect('/users')
+    },
+    changePassword: (req, res) => {
+        res.render('users/changePassword')
+    },
+    postChangePassword: (req, res) => {
+        // update password 
+        let a = db.get('ListAccout').find({ id: req.signedCookies.userId })
+            .assign({ password: md5(req.body.password) })
+            .value()
+        res.redirect('/users');
+
     }
 }

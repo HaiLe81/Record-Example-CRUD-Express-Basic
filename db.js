@@ -8,4 +8,9 @@ var db = low(adapter);
 db.defaults({ FreeLaHuflit: [] })
   .write()
 
+// Set some defaults
+db.defaults({ ListAccout: [] })
+  .write()
+
+
 module.exports = db;
