@@ -9,8 +9,8 @@ module.exports = {
 
         let page = parseInt(req.query.page) || 1;
         let perPage = 3;
-        
-        let start = (page -1) * perPage;
+
+        let start = (page - 1) * perPage;
         let end = page * perPage;
 
         res.render('users/index', {
@@ -44,6 +44,10 @@ module.exports = {
     },
     post: (req, res) => {
         req.body.id = shortid.generate();
+        var arr = req.file.path.split('').slice(15)
+        arr.splice(0, 0, "uploads/")
+        var newArr = arr.join('')
+        req.body.avatar = newArr;
 
         db.get('FreeLaHuflit').push(req.body)
             .write();

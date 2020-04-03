@@ -5,11 +5,7 @@ var adapter = new FileSync('db.json')
 var db = low(adapter);
 
 // Set some defaults
-db.defaults({ FreeLaHuflit: [] })
-  .write()
-
-// Set some defaults
-db.defaults({ ListAccout: [] })
+db.defaults({ FreeLaHuflit: [], ListAccout: [], Products: [], Sessions: [] })
   .write()
 
 

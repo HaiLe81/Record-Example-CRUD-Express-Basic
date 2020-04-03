@@ -1,0 +1,59 @@
+extends ../layout/common
+
+block cdn-bootstrap
+    .row
+        each item in listPro
+            .col-sm-4.mb-5
+                .card(style='width: 18rem;')
+                    img.card-img-top(src=item.image, alt='not found')
+                    .card-body
+                        h5.card-title= item.name
+                        p.card-text= item.description
+                        a.btn.btn-primary(href='/cart/add/' + item.id) Add Card
+    nav(aria-label='Page navigation example')
+        ul.pagination.justify-content-end#myNavi
+            - let index = 1;
+            - let page = Math.ceil(fullListPro.length/3)
+            if page <= 1
+                li.page-item.disabled
+                    a.page-link.previous(href='#', aria-label='Previous')
+                        span(aria-hidden='true') &laquo;
+                while index++ <= page
+                        li.page-item.item(value = (index-1))
+                            a.page-link(href="/products/" + '?page=' + (index-1) )= index-1
+                li.page-item.disabled
+                        a.page-link.next(href='/products/'+ '?page=', aria-label='Next')
+                            span(aria-hidden='true') &raquo;
+            else
+                li.page-item.enabled
+                    a.page-link.previous(href='#', aria-label='Previous')
+                        span(aria-hidden='true') &laquo;
+                - for (index ; index <= 3; index++)
+                    li.page-item.item(value = index)
+                        a.page-link(href="/products/" + '?page=' + index )= index
+                li.page-item.enabled
+                        a.page-link.next(href='/products/'+ '?page=', aria-label='Next')
+                            span(aria-hidden='true') &raquo;            
+    script.
+        // get index navigation 
+        let href = document.location.href;
+        let pageNum = parseInt(href.slice(-1));
+        pageNum === NaN || pageNum === 1 ? pageNum=1 : pageNum;
+        let lis = document.getElementsByClassName('item');
+        for(let j = 0; j< lis.length; j++) {
+            let li1 = lis[j];
+            let vl = parseInt(li1.getAttribute('value'));
+            if(vl === pageNum){
+                li1.classList.add("active")
+            }
+        }
+
+        // next page
+        let next = document.getElementsByClassName('next');
+        // change attribute href next 
+        next[0].setAttribute("href", "/products/?page=" + (pageNum+1))
+
+        // previous page
+        let previous = document.getElementsByClassName("previous");
+        // change attribute href previous
+        previous[0].setAttribute("href", "/products/?page=" + (pageNum-1))
