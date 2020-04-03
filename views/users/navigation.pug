@@ -16,9 +16,9 @@ nav(aria-label='Page navigation example')
                 li.page-item.enabled
                     a.page-link.previous(href='#', aria-label='Previous')
                         span(aria-hidden='true') &laquo;
-                while index++ <= page
-                        li.page-item.item(value = (index-1))
-                            a.page-link(href="/users/" + '?page=' + (index-1) )= index-1
+                - for (index ; index <= 3; index++)
+                    li.page-item.item(value = index)
+                        a.page-link(href="/users/" + '?page=' + index )= index
                 li.page-item.enabled
                         a.page-link.next(href='/users/'+ '?page=', aria-label='Next')
                             span(aria-hidden='true') &raquo;            
@@ -26,6 +26,7 @@ script.
     // get index navigation 
     let href = document.location.href;
     let pageNum = parseInt(href.slice(-1));
+    pageNum === NaN || pageNum === 1 ? pageNum=1 : pageNum;
     let lis = document.getElementsByClassName('item');
     for(let j = 0; j< lis.length; j++) {
         let li1 = lis[j];

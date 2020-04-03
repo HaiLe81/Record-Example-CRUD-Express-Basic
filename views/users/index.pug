@@ -12,12 +12,15 @@ block cdn-bootstrap
 
     table.table.table-hover
         tr.thead-dark
+            th.align-middle Avatar
             th.align-middle Name
             th.align-middle Phone
             th.align-middle Age
             th Action
         each person in FreeLaHuflit
             tr
+                td.align-middle
+                    img.img-fluid.rounded-circle(src=person.avatar, alt="not fount", width="64px")
                 td.align-middle= person.name
                 td.align-middle= person.phone
                 td.align-middle= person.age
