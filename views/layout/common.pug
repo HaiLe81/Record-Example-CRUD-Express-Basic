@@ -15,13 +15,13 @@ html
                         a.nav-link(href='/') Home
                     li.nav-item
                         a.nav-link(href='/users') Users
-                    li.nav-item
-                        .dropdown.position-relative
-                            button.btn.dropdown-toggle(type="button", id="dropdownMenuButton", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Products
+                    li.nav-item.position-relative
+                        a.nav-link.dropdown(href="/products") Products
+                            //- button.btn.dropdown-toggle(type="button", id="dropdownMenuButton", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Products
                             //- .dropdown-menu(aria-labelledby="dropdownMenuButton")
                             //-     each i in productDetail
                             //-         a.dropdown-item= ${i.index , i.value}
-                            a.position-absolute(style="bottom: 0; right: 0; color: gray")= countCart
+                            a.position-absolute(style="bottom: -5px; right: 0; color: gray")= countCart
 
             if !user
                 .btn-group

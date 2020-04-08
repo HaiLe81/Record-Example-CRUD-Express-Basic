@@ -2,6 +2,10 @@ require('dotenv').config();
 
 var express = require('express');
 var cookieParser = require('cookie-parser')
+var mongoose = require('mongoose');
+
+mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true});
+
 var app = express();
 var authMiddlelware = require('./middlewares/auth.middleware');
 var sessionMiddleware = require('./middlewares/session.middleware');
