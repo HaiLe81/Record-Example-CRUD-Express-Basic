@@ -48,7 +48,7 @@ module.exports = {
         res.redirect('/auth/login');
     },
     register: (req, res) => {
-        res.render('users/register');
+        res.render('auth/register');
     },
     postRegister: (req, res) => {
         // req.body.id = shortid.generate();
