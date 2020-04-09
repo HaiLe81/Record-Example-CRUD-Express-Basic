@@ -6,19 +6,23 @@ var shortid = require('shortid');
 
 var Auth = require('../models/auth.model');
 
+var Huflit = require('../models/user.model');
 
 module.exports = {
-    index: (req, res) => {
+    index: async function(req, res) {
         let page = parseInt(req.query.page) || 1;
         let perPage = 3;
 
         let start = (page - 1) * perPage;
         let end = page * perPage;
 
-        res.render('users/index', {
-            FreeLaHuflit: db.get('FreeLaHuflit').value().slice(start, end),
-            fullFree: db.get('FreeLaHuflit').value()
-        });
+        await Huflit.find()
+        .then(doc => {
+            res.render('users/index', {
+                FreeLaHuflit: doc.slice(start, end),
+                fullFree: doc
+            });
+        })
     },
     search: (req, res) => {
         let q = req.query.q;
@@ -36,13 +40,16 @@ module.exports = {
     get: (req, res) => {
         // var id = parseInt(req.params.id);
         var id = req.params.id;
-
+        console.log('id', id)
         // console.log(typeof id)
         var FreeLaHuflit = db.get('FreeLaHuflit').find({ id: id }).value();
 
-        res.render('users/view', {
-            FreeLaHuflit: FreeLaHuflit
-        });
+        Huflit.findOne({ _id: id }).then((doc) => {
+            console.log('doc>>>>', doc)
+            res.render('users/view', {
+                FreeLaHuflit: doc
+            });
+        })
     },
     post: (req, res) => {
         req.body.id = shortid.generate();
@@ -51,9 +58,20 @@ module.exports = {
         var newArr = arr.join('')
         req.body.avatar = newArr;
 
-        db.get('FreeLaHuflit').push(req.body)
-            .write();
+        // db.get('FreeLaHuflit').push(req.body)
+        //     .write();
+        // change code to upload file to mongoose
+        
+        var newUser = new Huflit({
+            name: req.body.name,
+            phone: req.body.phone,
+            age: req.body.age,
+            avatar: newArr
+        })
+
+        newUser.save()
         res.redirect('/users')
+
     },
     changePassword: (req, res) => {
         res.render('users/changePassword')
