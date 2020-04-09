@@ -13,6 +13,8 @@ router.get('/logout', controller.postLogOut);
 
 router.get('/register', controller.register);
 
-router.post('/register', controller.postRegister);
+router.post('/register', 
+validate.postRegister 
+, controller.postRegister);
 
 module.exports = router;

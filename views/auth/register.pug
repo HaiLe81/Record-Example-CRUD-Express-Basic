@@ -8,7 +8,7 @@ block cdn-bootstrap
         each error in errors
             .alert.alert-danger= error
 
-    form(method="POST")
+    form(href="/auth/register",method="POST")
         .form-group
             label(for="email") User Name
             input#email.form-control(name="username" type="text", value= values ? values.username : "")
