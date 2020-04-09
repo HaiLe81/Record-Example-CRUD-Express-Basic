@@ -4,6 +4,9 @@ var db = require('../db');
 
 var shortid = require('shortid');
 
+var Auth = require('../models/auth.model');
+
+
 module.exports = {
     index: (req, res) => {
         let page = parseInt(req.query.page) || 1;
@@ -55,12 +58,26 @@ module.exports = {
     changePassword: (req, res) => {
         res.render('users/changePassword')
     },
-    postChangePassword: (req, res) => {
+    postChangePassword:  (req, res) => {
         // update password 
-        let a = db.get('ListAccout').find({ id: req.signedCookies.userId })
-            .assign({ password: md5(req.body.password) })
-            .value()
-        res.redirect('/users');
+        // let a = db.get('ListAccout').find({ id: req.signedCookies.userId })
+        //     .assign({ password: md5(req.body.password) })
+        //     .value()
+        
+        // update password
+        Auth.findOne({ _id: req.signedCookies.userId }, async function(err, doc) {
+            if(err){
+                console.log(err)
+            }
 
+            if(doc === null){
+                console.log('null')
+            } else {
+                doc.password = md5(req.body.password);
+                doc.save()
+            }
+        })
+
+        res.redirect('/users');
     }
 }

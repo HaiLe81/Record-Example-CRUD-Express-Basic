@@ -13,11 +13,9 @@ module.exports.postRegister = async function (req, res, next) {
 
     await Auth.find()
         .then((doc) => {
-            console.log('acc: ', doc)
             doc.map(x => {
                 if (x.username === req.body.username) {
                     errors.push('Username is exist.')
-                    console.log('x', x)
                 }
             })
         })
