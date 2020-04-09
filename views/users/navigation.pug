@@ -16,7 +16,7 @@ nav(aria-label='Page navigation example')
                 li.page-item.enabled
                     a.page-link.previous(href='#', aria-label='Previous')
                         span(aria-hidden='true') &laquo;
-                - for (index ; index <= 3; index++)
+                - for (index ; index < 3; index++)
                     li.page-item.item(value = index)
                         a.page-link(href="/users/" + '?page=' + index )= index
                 li.page-item.enabled

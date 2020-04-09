@@ -4,7 +4,7 @@ var huflitSchema = new mongoose.Schema({
     name: String,
     phone: String,
     age: String,
-    avatart: String
+    avatar: String
 });
 
 var Huflit = mongoose.model('FreeLaHuflit', huflitSchema, "FreeLaHuflit");
