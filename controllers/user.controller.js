@@ -2,8 +2,6 @@ var md5 = require('md5');
 
 var db = require('../db');
 
-var shortid = require('shortid');
-
 var Auth = require('../models/auth.model');
 
 var Huflit = require('../models/user.model');
@@ -15,23 +13,30 @@ module.exports = {
 
         let start = (page - 1) * perPage;
         let end = page * perPage;
-
         await Huflit.find()
         .then(doc => {
+            console.log('fullFree ength:', doc.length)
             res.render('users/index', {
                 FreeLaHuflit: doc.slice(start, end),
-                fullFree: doc
+                fullFree: doc.length
             });
         })
     },
-    search: (req, res) => {
+    search: async function(req, res) {
         let q = req.query.q;
-        let matchedUsers = db.get('FreeLaHuflit').value().filter((user) => {
-            return user.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
-        })
+        // let matchedUsers = db.get('FreeLaHuflit').value().filter((user) => {
+        //     return user.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
+        // })
 
-        res.render('users/index', {
-            FreeLaHuflit: matchedUsers
+        await Huflit.find()
+        .then((doc) => {
+            let matchedUsers = doc.filter(x => {
+                return x.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
+            })
+            
+            res.render('users/index', {
+                FreeLaHuflit: matchedUsers
+            })
         })
     },
     create: (req, res) => {
@@ -51,12 +56,11 @@ module.exports = {
             });
         })
     },
-    post: (req, res) => {
-        req.body.id = shortid.generate();
+    post:  (req, res) =>  {
+        
         var arr = req.file.path.split('').slice(15)
         arr.splice(0, 0, "uploads/")
         var newArr = arr.join('')
-        req.body.avatar = newArr;
 
         // db.get('FreeLaHuflit').push(req.body)
         //     .write();

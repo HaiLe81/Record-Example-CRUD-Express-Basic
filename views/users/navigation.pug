@@ -1,7 +1,7 @@
 nav(aria-label='Page navigation example')
         ul.pagination.justify-content-end#myNavi
             - let index = 1;
-            - let page = Math.ceil(fullFree.length/3)
+            - let page = Math.ceil(fullFree/3)
             if page <= 1
                 li.page-item.disabled
                     a.page-link.previous(href='#', aria-label='Previous')
