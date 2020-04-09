@@ -26,9 +26,7 @@ app.set('view engine', 'pug')
 app.set('views', './views')
 
 app.get('/', (req, res) => {
-    res.render('index', {
-        name: 'Hai Le'
-    })
+    res.render('index')
 });
 
 app.use(express.static('public'))

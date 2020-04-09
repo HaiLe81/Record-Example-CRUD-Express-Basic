@@ -6,7 +6,7 @@ html
         script(href="/public/javascript/navigation.js")
     body
         nav.navbar.navbar-expand-lg.navbar-light.bg-light
-            a.navbar-brand(href='/') FreelHuflit
+            a.font-weight-bold.navbar-brand(href='/') FreelHuflit
             button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarNav', aria-controls='navbarNav', aria-expanded='false', aria-label='Toggle navigation')
                 span.navbar-toggler-icon
             #navbarNav.collapse.navbar-collapse
@@ -32,6 +32,6 @@ html
                     a.mr-2(href="/users/info/changePassword")= user.username
                     a.btn.btn-primary(href="/auth/logout", role="button") Log out
             
-      
+            
         .container.pt-5
             block cdn-bootstrap

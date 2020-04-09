@@ -4,7 +4,8 @@
 var Product = require('../models/product.model');
 
 module.exports = {
-    get: (req, res) => {
+    get: async function(req, res) {
+
         let page = parseInt(req.query.page) || 1;
         let perPage = 6;
 
@@ -14,7 +15,8 @@ module.exports = {
         //     listPro: db.get('Products').value().slice(start, end),
         //     fullListPro: db.get('Products').value()
         // });
-        Product.find().then((products) => {
+        await Product.find()
+        .then((products) => {
             // console.log('products:', products)
             res.render('products/product', {
                 listPro: products.slice(start, end),
