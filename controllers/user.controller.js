@@ -6,7 +6,6 @@ var shortid = require('shortid');
 
 module.exports = {
     index: (req, res) => {
-
         let page = parseInt(req.query.page) || 1;
         let perPage = 3;
 

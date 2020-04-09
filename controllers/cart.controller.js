@@ -52,6 +52,7 @@ module.exports =  {
             if(err){
                 console.log(err)
             }
+            console.log('doc11', doc)
             if(doc === null){
                 console.log('null')
                 var doc = new Cart();
@@ -77,32 +78,6 @@ module.exports =  {
             }
 
         })
-        // .then(doc => {
-        //     console.log('doc>', doc.cart)
-        //     let listCart = doc.cart;
-        //     let index = listCart.findIndex(x => x.productId === productId)
-        //     if(index !== 1){
-        //         listCart[index].count+=1;
-        //     } else {
-        //         listCart.push({ productId: productId, count: 1 })
-        //     }
-        //     doc.save()
-        // })
-        // .then(() => {
-        //     var doc = new Cart();
-        //     doc.save()
-        //     doc.sessionId = sessionId;
-        //     doc.cart = [
-        //         { productId: productId, count: 1 }
-        //     ]
-        //     console.log('doc catch>', doc)
-        //     doc.save()
-        // })
-        // .catch(err => {
-        //     console.log('err>', err)
-
-        // })
- 
         res.redirect('/products');
     }
 }
