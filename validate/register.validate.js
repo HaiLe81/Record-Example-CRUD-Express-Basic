@@ -1,13 +1,26 @@
-var db = require('../db');
+// var db = require('../db');
 
-module.exports.postRegister = (req, res, next) => {
+var Auth = require('../models/auth.model');
+
+module.exports.postRegister = async function (req, res, next) {
     let errors = [];
 
-    db.get('ListAccout').value().filter((item) => {
-        if (item.username === req.body.username) {
-            errors.push('Username is exist.')
-        }
-    })
+    // db.get('ListAccout').value().filter((item) => {
+    //     if (item.username === req.body.username) {
+    //         errors.push('Username is exist.')
+    //     }
+    // })
+
+    await Auth.find()
+        .then((doc) => {
+            console.log('acc: ', doc)
+            doc.map(x => {
+                if (x.username === req.body.username) {
+                    errors.push('Username is exist.')
+                    console.log('x', x)
+                }
+            })
+        })
 
     if (!req.body.username) {
         errors.push('Phone is required.')

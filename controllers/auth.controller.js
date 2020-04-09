@@ -34,7 +34,6 @@ module.exports = {
                 });
                 return;
             }
-            console.log('_id', user._id)
             res.cookie('userId', user._id, {
                 signed: true
             })
@@ -79,7 +78,7 @@ module.exports = {
     register: (req, res) => {
         res.render('auth/register');
     },
-    postRegister: (req, res) => {
+    postRegister: async function(req, res) {
         // req.body.id = shortid.generate();
 
         // db.get('ListAccout').push({
@@ -93,8 +92,8 @@ module.exports = {
             username: req.body.username,
             password: md5(req.body.password)
         })
-        newAcc.save().then(() => {
-            alert('Register Success')
+        await newAcc.save().then(() => {
+            console.log('Register Success')
         })
 
         res.redirect('/users/login')
