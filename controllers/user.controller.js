@@ -1,5 +1,12 @@
 var md5 = require('md5');
 
+var cloudinary = require('cloudinary').v2;
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME, 
+    api_key: process.env.CLOUD_KEY,
+    api_secret: process.env.CLOUD_SECRET
+})
+
 var db = require('../db');
 
 var Auth = require('../models/auth.model');
@@ -42,21 +49,22 @@ module.exports = {
     create: (req, res) => {
         res.render('users/create')
     },
-    get: (req, res) => {
+    get: async function(req, res) {
         // var id = parseInt(req.params.id);
         var id = req.params.id;
         console.log('id', id)
         // console.log(typeof id)
-        var FreeLaHuflit = db.get('FreeLaHuflit').find({ id: id }).value();
+        // var FreeLaHuflit = db.get('FreeLaHuflit').find({ id: id }).value();
 
-        Huflit.findOne({ _id: id }).then((doc) => {
+        await Huflit.findOne({ _id: id })
+        .then((doc) => {
             console.log('doc>>>>', doc)
             res.render('users/view', {
                 FreeLaHuflit: doc
             });
         })
     },
-    post:  (req, res) =>  {
+    post: async function(req, res) {
         
         var arr = req.file.path.split('').slice(15)
         arr.splice(0, 0, "uploads/")
@@ -65,15 +73,32 @@ module.exports = {
         // db.get('FreeLaHuflit').push(req.body)
         //     .write();
         // change code to upload file to mongoose
-        
-        var newUser = new Huflit({
+
+        const file = req.file
+        console.log(file)
+
+        const path = await cloudinary.uploader.upload(
+            req.file.path
+        )
+        .then(result => result.url)
+        .catch(_ => false)
+        // const path = await cloudinary.uploader.upload(
+        //     newArr,
+        //     { public_id: `user/${newArr}` }
+        // ).then(result => {
+        //     console.log('result', result)
+        //     return result
+        // })
+        // .catch(_ => false)
+        //     console.log('path Cloud', path)
+        const newUser = new Huflit({
             name: req.body.name,
             phone: req.body.phone,
             age: req.body.age,
-            avatar: newArr
+            avatar: path
         })
-
-        newUser.save()
+        console.log('run here 1')
+        await newUser.save()
         res.redirect('/users')
 
     },
