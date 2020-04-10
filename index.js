@@ -4,7 +4,12 @@ var express = require('express');
 var cookieParser = require('cookie-parser')
 var mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true});
+mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+    useUnifiedTopology: true
+});
 
 var app = express();
 var authMiddlelware = require('./middlewares/auth.middleware');
