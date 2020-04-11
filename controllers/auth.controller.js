@@ -8,39 +8,43 @@ module.exports = {
         res.render('auth/login');
     },
     postLogin: (req, res) => {
-        let username = req.body.username;
-        let password = req.body.password;
+        try {
+            let username = req.body.username;
+            let password = req.body.password;
 
-        // let user = db.get('ListAccout').find({ username: username }).value();
-        Auth.findOne({ username: username }).then((user) => {
-            // console.log('user', user)
-            if (!user) {
-                res.render('auth/login', {
-                    errors: [
-                        'Users does not exists.'
-                    ],
-                    values: req.body
-                });
-                return;
-            }
-            var hashedPassword = md5(password);
+            // let user = db.get('ListAccout').find({ username: username }).value();
+            Auth.findOne({ username: username }).then((user) => {
+                // console.log('user', user)
+                if (!user) {
+                    res.render('auth/login', {
+                        errors: [
+                            'Users does not exists.'
+                        ],
+                        values: req.body
+                    });
+                    return;
+                }
+                var hashedPassword = md5(password);
 
-            if (user.password !== hashedPassword) {
-                res.render('auth/login', {
-                    errors: [
-                        'Wrong password.'
-                    ],
-                    values: req.body
-                });
-                return;
-            }
-            res.cookie('userId', user._id, {
-                signed: true
+                if (user.password !== hashedPassword) {
+                    res.render('auth/login', {
+                        errors: [
+                            'Wrong password.'
+                        ],
+                        values: req.body
+                    });
+                    return;
+                }
+                res.cookie('userId', user._id, {
+                    signed: true
+                })
+
+                res.redirect('/users');
+                return user;
             })
-
-            res.redirect('/users');
-            return user;
-        })
+        } catch (error) {
+            console.log(error)
+        }
         // if (!user) {
         //     res.render('auth/login', {
         //         errors: [
@@ -78,7 +82,7 @@ module.exports = {
     register: (req, res) => {
         res.render('auth/register');
     },
-    postRegister: async function(req, res) {
+    postRegister: async function (req, res) {
         // req.body.id = shortid.generate();
 
         // db.get('ListAccout').push({
@@ -88,14 +92,18 @@ module.exports = {
         // })
         // .write();
 
-        var newAcc = new Auth({
-            username: req.body.username,
-            password: md5(req.body.password)
-        })
-        await newAcc.save().then(() => {
-            console.log('Register Success')
-        })
-
-        res.redirect('/users/login')
+        try {
+            var newAcc = new Auth({
+                username: req.body.username,
+                password: md5(req.body.password)
+            })
+            await newAcc.save().then(() => {
+                console.log('Register Success')
+            })
+    
+            res.redirect('/users/login')
+        } catch(error) {
+            console.log(error)
+        }
     }
 }
