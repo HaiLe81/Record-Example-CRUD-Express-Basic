@@ -1,11 +1,12 @@
-var md5 = require('md5');
-
 var cloudinary = require('cloudinary').v2;
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.CLOUD_KEY,
     api_secret: process.env.CLOUD_SECRET
 })
+
+var md5 = require('md5');
+
 
 var Auth = require('../models/auth.model');
 
@@ -19,13 +20,13 @@ module.exports = {
         let start = (page - 1) * perPage;
         let end = page * perPage;
         await Huflit.find()
-            .then(doc => {
-                console.log('fullFree ength:', doc.length)
-                res.render('users/index', {
-                    FreeLaHuflit: doc.slice(start, end),
-                    fullFree: doc.length
-                });
-            })
+        .then(doc => {
+            console.log('fullFree ength:', doc.length)
+            res.render('users/index', {
+                FreeLaHuflit: doc.slice(start, end),
+                fullFree: doc.length
+            });
+        })
     },
     search: async function (req, res) {
         let q = req.query.q;
@@ -33,63 +34,71 @@ module.exports = {
         //     return user.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
         // })
 
-        await Huflit.find()
-            .then((doc) => {
-                let matchedUsers = doc.filter(x => {
-                    return x.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
-                })
+        try {
+            await Huflit.find()
+                .then((doc) => {
+                    let matchedUsers = doc.filter(x => {
+                        return x.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
+                    })
 
-                res.render('users/index', {
-                    FreeLaHuflit: matchedUsers
+                    res.render('users/index', {
+                        FreeLaHuflit: matchedUsers
+                    })
                 })
-            })
+        } catch (error) {
+            console.log(error)
+        }
     },
     create: (req, res) => {
         res.render('users/create')
     },
     get: async function (req, res) {
-        // var id = parseInt(req.params.id);
-        var id = req.params.id;
-        console.log('id', id)
+
         // console.log(typeof id)
         // var FreeLaHuflit = db.get('FreeLaHuflit').find({ id: id }).value();
-
-        await Huflit.findOne({ _id: id })
-            .then((doc) => {
-                console.log('doc>>>>', doc)
-                res.render('users/view', {
-                    FreeLaHuflit: doc
-                });
-            })
+        try {
+            var id = req.params.id;
+            console.log('id', id)
+            await Huflit.findOne({ _id: id })
+                .then((doc) => {
+                    res.render('users/view', {
+                        FreeLaHuflit: doc
+                    });
+                })
+        } catch (error) {
+            console.log('error: ', error)
+        }
     },
     postCreateUser: async function (req, res) {
 
-        var arr = req.file.path.split('').slice(15)
-        arr.splice(0, 0, "uploads/")
-        var newArr = arr.join('')
+        // var arr = req.file.path.split('').slice(15)
+        // arr.splice(0, 0, "uploads/")
+        // var newArr = arr.join('')
 
         // db.get('FreeLaHuflit').push(req.body)
         //     .write();
         // change code to upload file to mongoose
 
-        const file = req.file
-        console.log(file)
+        try {
+            const file = req.file.path
 
-        const path = await cloudinary.uploader.upload(
-            req.file.path
-        )
-            .then(result => result.url)
-            .catch(_ => false)
+            const path = await cloudinary.uploader.upload(
+                file
+            )
+                .then(result => result.url)
+                .catch(error => console.log('erro:::>', error))
 
-        const newUser = new Huflit({
-            name: req.body.name,
-            phone: req.body.phone,
-            age: req.body.age,
-            avatar: path
-        })
-        console.log('run here 1')
-        await newUser.save()
-        res.redirect('/users')
+            const newUser = new Huflit({
+                name: req.body.name,
+                phone: req.body.phone,
+                age: req.body.age,
+                avatar: path
+            })
+            await newUser.save()
+            res.redirect('/users')
+        } catch (error) {
+            console.log(error)
+        }
 
     },
     changePassword: (req, res) => {
@@ -102,20 +111,24 @@ module.exports = {
         //     .value()
 
         // update password
-        Auth.findOne({ _id: req.signedCookies.userId }, async function (err, doc) {
-            if (err) {
-                console.log(err)
-            }
+        try {
+            Auth.findOne({ _id: req.signedCookies.userId }, async function (err, doc) {
+                if (err) {
+                    console.log(err)
+                }
 
-            if (doc === null) {
-                console.log('null')
-            } else {
-                doc.password = md5(req.body.password);
-                doc.save()
-            }
-        })
+                if (doc === null) {
+                    console.log('null')
+                } else {
+                    doc.password = md5(req.body.password);
+                    doc.save()
+                }
+            })
 
-        res.redirect('/users');
+            res.redirect('/users');
+        } catch (error) {
+            console.log(error)
+        }
     },
     editUser: async function (req, res) {
         try {
@@ -135,19 +148,19 @@ module.exports = {
 
         const User = await Huflit.findById(id)
         console.log("user>>>", User)
-        if(User){
-            const allowUpdates = [ 'name', 'phone', 'age' ]
+        if (User) {
+            const allowUpdates = ['name', 'phone', 'age']
             const updated = req.body
             const errors = []
             const age = +updated.age
-            if(!updated.name){
+            if (!updated.name) {
                 errors.push('Name is required')
             }
-            if(typeof age !== 'number' || age <= 0 || isNaN(age) === true){
+            if (typeof age !== 'number' || age <= 0 || isNaN(age) === true) {
                 errors.push('Age must be number and larger than 0')
             }
             try {
-                if(errors.length > 0){
+                if (errors.length > 0) {
                     throw new Error('has errors')
                 }
                 allowUpdates.forEach(key => {
@@ -156,7 +169,7 @@ module.exports = {
                 await User.save()
                 res.redirect('/users')
             } catch (error) {
-                if(errors.length === 0) errors.push('has an error')
+                if (errors.length === 0) errors.push('has an error')
 
                 res.render('/users', {
                     User: updated, errors
@@ -168,7 +181,7 @@ module.exports = {
     postDeleteUser: async (req, res) => {
         try {
             const _id = req.params.id
-            if(!_id) throw new Error('not found')
+            if (!_id) throw new Error('not found')
             console.log('_id: ', _id)
             await Huflit.deleteOne({ _id: _id })
             res.redirect('/users')
