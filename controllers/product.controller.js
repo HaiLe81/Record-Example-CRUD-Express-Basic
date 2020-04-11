@@ -1,6 +1,3 @@
-// var db = require('../db');
-
-// var shortid = require('shortid');
 var Product = require('../models/product.model');
 
 module.exports = {

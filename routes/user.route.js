@@ -3,6 +3,7 @@ var multer  = require('multer')
 
 var controller = require('../controllers/user.controller');
 var validate = require('../validate/user.validate');
+var idMiddlelware = require('../middlewares/id.middleware');
 
 var upload = multer({ dest: './public/uploads/' })
 
@@ -16,16 +17,22 @@ router.get('/create', controller.create);
 
 router.get('/:id', controller.get);
 
+router.get('/info/changePassword', controller.changePassword);
+
+router.get('/edit/:id', controller.editUser);
+
 // router.get('/navigation', controller.postNavigation)
 
 router.post('/create', 
     upload.single('avatar'), 
     validate.postCreate, 
-    controller.post
+    controller.postCreateUser
 );
 
-router.get('/info/changePassword', controller.changePassword);
-
 router.post('/info/changePassword', controller.postChangePassword);
+
+router.post('/edit/:id', controller.postEditUser);
+
+router.get('/delete/:id', controller.postDeleteUser);
 
 module.exports = router;

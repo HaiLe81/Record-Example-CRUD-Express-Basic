@@ -1,0 +1,22 @@
+extends ../layout/common
+
+block cdn-bootstrap
+
+    h1 Edit user
+
+    if errors
+        each error in errors
+            .alert.alert-danger= error
+
+    form(action="", method="POST")
+        .form-group
+            label(for="name") Name
+            input#name.form-control(name="name" type="text", value= User && User.name || "")
+        .form-group
+            label(for="phone") Phone
+            input#phone.form-control(name="phone" type="text", value= User && User.phone || "")
+        .form-group
+            labe(for="age") age
+            input#age.form-control(name="age" type="text", value= User && User.age || "")
+
+        button.btn.btn-primary Save
