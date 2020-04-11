@@ -28,6 +28,6 @@ block cdn-bootstrap
                     form(action="" method="POST")
                         .form-group
                             a.btn.btn-light.m-1(href="/users/" + person.id) View
-                            a.btn.btn-light.m-1(href="#") Edit
-                            a.btn.btn-light.m-1(href="#") Delete
+                            a.btn.btn-light.m-1(href="/users/edit/" + person.id) Edit
+                            a.btn.btn-light.m-1(href="/users/delete/" + person.id) Delete
     include navigation.pug

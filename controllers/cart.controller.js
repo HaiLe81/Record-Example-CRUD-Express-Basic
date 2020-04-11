@@ -3,7 +3,7 @@
 var Cart = require('../models/cart.model');
 
 module.exports =  {
-    addToCart: (req, res, next) => {
+    addToCart: (req, res) => {
         // get productID
         var productId = req.params.productId;
         // console.log('productId1:', productId)
